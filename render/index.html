@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Sam Editor Code</title>
+  </head>
+  <body>
+    <form action="" class="ffNameForm hidden">
+      <input type="text" class="ffNameInput" placeholder="File/folder name" />
+    </form>
+
+    <div class="currentFolder">
+      <b class="currentFolderPar">no folder selected</b>
+      <button class="createFile hidden">
+        <i class="fa-solid fa-file-circle-plus"></i>
+      </button>
+      <button class="createFolder hidden">
+        <i class="fa-solid fa-folder-plus"></i>
+      </button>
+      <button class="reload hidden">
+        <i class="fa-solid fa-arrows-rotate"></i>
+      </button>
+    </div>
+
+    <div class="files"></div>
+
+    <div class="tab hidden">
+      <p class="fileName"></p>
+      <button class="closeTab"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div id="editor" class="hidden"></div>
+
+    <div class="alert hidden">
+      <h2>
+        <i class="fa-solid fa-triangle-exclamation fa-xl"></i> Do you want to
+        save changes?
+      </h2>
+      <p>&nbsp;</p>
+      <p>
+        There are changes withot saving, use the buttons below to save or not
+      </p>
+      <button class="saveCode">Save</button>
+      <button class="cancelButton">Cancel</button>
+      <button class="dontSave">Don't Save</button>
+    </div>
+
+    <div class="noEditor">
+      <h1>Sam Editor</h1>
+      <h1>&nbsp;</h1>
+      <p>
+        Open Folder: <button class="shortcutButton">Ctrl</button>+<button
+          class="shortcutButton"
+        >
+          Shift</button
+        >+<button class="shortcutButton">O</button>
+      </p>
+      <p>&nbsp;</p>
+      <p>
+        Open File: <button class="shortcutButton">Ctrl</button>+<button
+          class="shortcutButton"
+        >
+          Shift</button
+        >+<button class="shortcutButton">F</button>
+      </p>
+    </div>
+
+    <script src="./js/fontawesome.js"></script>
+    <script type="module" src="./js/main.js"></script>
+    <script type="module" src="./js/getLang.js"></script>
+    <script type="module" src="./js/getIcon.js"></script>
+  </body>
+</html>

@@ -1,0 +1,305 @@
+@font-face {
+  font-family: "CascadiaCode";
+  src: url("CascadiaCode.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  width: 100%;
+  height: 100%;
+}
+
+.read-folder,
+.read-file {
+  width: 100px;
+  height: 30px;
+  border: none;
+  outline: none;
+  background-color: #444444;
+  box-shadow: 0 0 10px #00000080;
+  color: #ffffff;
+  font-weight: bold;
+  border-radius: 0;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.alert {
+  position: absolute;
+  width: 30%;
+  height: 30%;
+  top: 35%;
+  left: 35%;
+  z-index: 10000;
+  background-color: #666666;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #00000080;
+  padding: 1%;
+  color: #ffffff;
+}
+
+.saveCode,
+.dontSave,
+.cancelButton {
+  position: absolute;
+  width: calc(100% / 3);
+  bottom: 0;
+  height: 20%;
+  border: 1px solid #cccccc;
+  background-color: #666666;
+}
+
+.saveCode:hover,
+.dontSave:hover,
+.cancelButton:hover {
+  background-color: #555555;
+}
+
+.saveCode {
+  left: 0;
+  border-bottom-left-radius: 10px;
+}
+
+.cancelButton {
+  left: calc(100% / 3);
+}
+
+.dontSave {
+  right: 0;
+  border-bottom-right-radius: 10px;
+}
+
+.ffNameForm {
+  position: fixed;
+  width: 30%;
+  height: 20%;
+  top: 40%;
+  left: 35%;
+  z-index: 10000;
+  background-color: #666666;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #00000080;
+}
+
+.ffNameInput {
+  width: 70%;
+  height: 20%;
+  outline: none;
+  border: none;
+  border-radius: 5px;
+  background-color: #999999;
+  color: #000000;
+  box-shadow: 0 0 10px #00000080;
+  transition: all 0.2s;
+  padding-left: 2%;
+  padding-right: 2%;
+}
+
+.ffNameInput:focus {
+  background-color: #888888;
+}
+
+.ffNameInput::placeholder {
+  color: #dddddd;
+}
+
+.files {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  width: 20%;
+  background-color: #666666;
+  height: 95%;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+.fileButton {
+  width: 100%;
+  outline: none;
+  background-color: #666666;
+  color: #ffffff;
+  border: 1px solid #ffffff;
+  position: relative;
+}
+
+.fileButton:hover {
+  background-color: #555555;
+}
+
+.fa-chevron-right {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+}
+
+.deleteButton,
+.renameButton,
+.createFileButton,
+.createFolderButton {
+  background-color: transparent;
+  height: 25px;
+  aspect-ratio: 1 / 1;
+  border: none;
+  outline: none;
+  border-radius: 5px;
+  color: #aaaaaa;
+  margin-bottom: 5px;
+  margin-top: 20px;
+}
+
+.deleteButton:hover,
+.renameButton:hover,
+.createFileButton:hover,
+.createFolderButton:hover {
+  background-color: #444444;
+}
+
+.filePar {
+  position: absolute;
+  margin-left: 10%;
+  margin-top: 5px;
+}
+
+.opened {
+  rotate: 90deg;
+}
+
+#editor {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 80%;
+  height: 95%;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+}
+
+#editor.image {
+  background-color: #222222;
+}
+
+.shortcutButton {
+  background-color: #333333;
+  color: #ffffff;
+  font-weight: bold;
+  cursor: default;
+  border: none;
+  border-radius: 0;
+  outline: none;
+  padding: 5px;
+}
+
+.noEditor {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 80%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  background-color: #555555;
+  color: #ffffff;
+}
+
+.tab {
+  position: fixed;
+  top: 0;
+  left: 0;
+  min-width: 15%;
+  height: 5%;
+  background-color: #222222;
+  color: #ffffff;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  z-index: 1000;
+}
+
+.closeTab {
+  height: 75%;
+  aspect-ratio: 1 / 1;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  border-radius: 5px;
+  color: #ffffff;
+}
+
+.closeTab:hover {
+  background-color: #333333;
+}
+
+.currentFolder {
+  position: fixed;
+  width: 20%;
+  height: 5%;
+  top: 0;
+  right: 0;
+  background-color: #555555;
+  color: #ffffff;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.currentFolderPar {
+  margin-right: 5%;
+  text-transform: uppercase;
+}
+
+.createFile,
+.createFolder,
+.reload {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  border-radius: 5px;
+  height: 75%;
+  aspect-ratio: 1 / 1;
+  color: #ffffff;
+}
+
+.createFile:hover,
+.createFolder:hover,
+.reload:hover {
+  background-color: #666666;
+  outline: none;
+}
+
+.hidden {
+  display: none;
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: gray;
+}
+
+::-webkit-scrollbar-track {
+  background-color: lightgray;
+}
