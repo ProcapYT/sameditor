@@ -11,8 +11,8 @@ linux (debian):
 3. sudo dpkg -i dist/sameditor_X.Y.Z_amd64.deb
 
 windows:
-**open cmd | powershell as an administrator**
 
-1. npm install | yarn install
-2. npm run build-windows
-3. dist/sameditor_X.Y.Z.exe
+1. open cmd or powershell as an administrator
+2. npm install | yarn install
+3. npm run build-windows
+4. dist/sameditor_X.Y.Z.exe
