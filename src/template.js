@@ -25,11 +25,8 @@ const mainTemplate = [
           const filePath = await openDialog(["openFile"]);
 
           if (filePath) {
-            const fileContent = await fs.readFile(filePath, "utf-8");
-
             global.mainWindow.webContents.send("fileSelected", {
               file: filePath,
-              code: fileContent,
             });
           }
         },

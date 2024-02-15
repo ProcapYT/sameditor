@@ -14,9 +14,7 @@ const $ffNameInput = document.querySelector(".ffNameInput");
 const $ffNameForm = document.querySelector(".ffNameForm");
 const $editor = document.querySelector("#editor");
 const $currentFolderPar = document.querySelector(".currentFolderPar");
-const $tab = document.querySelector(".tab");
-const $fileName = document.querySelector(".fileName");
-const $closeTab = document.querySelector(".closeTab");
+const $tabsContainer = document.querySelector(".tabsContainer");
 const $reloadButton = document.querySelector(".reload");
 const $alertContainer = document.querySelector(".alert");
 const $saveButton = document.querySelector(".saveCode");
@@ -38,10 +36,224 @@ const editorConfig = {
 };
 
 // define some "global" variables
-let currentEditor = null;
 let currentFolderPath;
 let currentEditingFile = null;
-let codeSaved = true;
+let currentEditor = null;
+
+const currentTabs = [];
+
+let currentTab = null;
+
+async function openNewTab(fullPath, fileExtension, iconProperties, fileName) {
+  // get the icon class from the first index of the properties array
+  const iconClass = iconProperties[0];
+
+  // create the tab elements
+  const $tab = document.createElement("button");
+  const $fileName = document.createElement("p");
+  const $closeTab = document.createElement("button");
+  const $closeTabIcon = document.createElement("i");
+
+  if (!currentTabs.includes(fullPath)) {
+    // clean the file name element of the tab
+    $fileName.innerHTML = "";
+
+    // show the editor and the tab
+    $editor.classList.remove("hidden");
+
+    // get the language of the file
+    const language = getLang(fileExtension.toLowerCase());
+
+    // read the file to get the content
+    const fileContent = await fs.readFile(fullPath, "utf-8");
+
+    // create some elements
+    const $fileNamePar = document.createElement("p");
+    const $tabFileIcon = document.createElement("i");
+
+    // add the classes to the tab elements
+    $tab.classList.add("tab");
+    $fileName.classList.add("fileName");
+    $closeTab.classList.add("closeTab");
+    $closeTabIcon.classList.add("fa-solid", "fa-xmark");
+    $tabFileIcon.classList.add(...iconClass.split(" "));
+    $tabFileIcon.style = iconProperties[1];
+
+    // add the tab to the container
+    $closeTab.appendChild($closeTabIcon);
+    $fileNamePar.appendChild($tabFileIcon);
+    $fileNamePar.appendChild(document.createTextNode(` ${fileName}`));
+    $fileName.appendChild($fileNamePar);
+    $tab.appendChild($fileName);
+    $tab.appendChild($closeTab);
+    $tabsContainer.appendChild($tab);
+
+    // push the full path to the tabs array
+    currentTabs.push(fullPath);
+
+    // set some necesary data in the attributes of the tab element
+    $tab.dataset.path = fullPath;
+    $tab.dataset.language = language;
+    $tab.dataset.codeSaved = "true";
+    $tab.dataset.content = fileContent;
+
+    // if there is a current tab then remove the selected class
+    if (currentTab) {
+      currentTab.classList.remove("selected");
+    }
+
+    // make this tab the current one and add the selected class
+    currentTab = $tab;
+    $tab.classList.add("selected");
+
+    // create the editor
+    createEditor(language, fileContent, fullPath);
+
+    function handleEditorKeyDown() {
+      currentEditor.onKeyDown((event) => {
+        // save the code when Ctrl+S is pressed
+        if ((event.ctrlKey || event.metaKey) && event.code === "KeyS") {
+          saveCode(currentEditingFile, currentEditor.getValue());
+
+          // add the original icon to the element so the user knows that the code is saved
+          $closeTabIcon.classList.remove(...$closeTabIcon.classList);
+          $closeTabIcon.classList.add("fa-solid", "fa-xmark");
+
+          // set the code-saved attribute from the tab to true
+          $tab.dataset.codeSaved = "true";
+        }
+      });
+
+      currentEditor.onDidChangeModelContent(() => {
+        // set the current editor value in the tab so it can be accesed later
+        $tab.dataset.content = currentEditor.getValue();
+
+        // add an icon to the tab so the user knows that the code hans't been saved
+        $closeTabIcon.classList.remove(...$closeTabIcon.classList);
+        $closeTabIcon.classList.add("fa-solid", "fa-circle", "fa-xs");
+
+        // set the code-saved attribute from the tab to false
+        $tab.dataset.codeSaved = "false";
+      });
+    }
+
+    // if there is an editor, handle the keydown
+    if (currentEditor) {
+      handleEditorKeyDown();
+    }
+
+    $tab.addEventListener("click", () => {
+      // remove the class of selected from the current tab element
+      if (currentTab) {
+        currentTab.classList.remove("selected");
+      }
+
+      // set the current tab to be the selected tab and add the selected class
+      currentTab = $tab;
+      $tab.classList.add("selected");
+
+      // dispose the editor if there is one
+      if (currentEditor) {
+        currentEditor.dispose();
+        currentEditor = null;
+      }
+
+      // clear the editor
+      $editor.innerHTML = "";
+
+      // create an editor with the tab data
+      createEditor(
+        $tab.dataset.language,
+        $tab.dataset.content,
+        $tab.dataset.path
+      );
+
+      // handle the editor keydown so we can save the file later
+      if (currentEditor) {
+        handleEditorKeyDown();
+      }
+    });
+
+    $closeTab.addEventListener("click", (e) => {
+      // stop the button propagation
+      e.stopPropagation();
+
+      if ($tab.dataset.codeSaved === "true") {
+        // remove the tab from the tabs container element
+        if ($tabsContainer.contains($tab)) {
+          $tabsContainer.removeChild($tab);
+        }
+
+        // remove the file path from the tabs array
+        currentTabs.splice(currentTabs.indexOf(fullPath), 1);
+
+        // if there is a current editor, dispose it
+        if (currentEditor) {
+          currentEditor.dispose();
+          currentEditor = null;
+        }
+
+        // clear the editor
+        $editor.innerHTML = "";
+
+        // remove the image class from the editor so it has no background
+        $editor.classList.remove("image");
+
+        if (currentTabs.length >= 1) {
+          // if the current tab is not the last one get the last one
+          const $nextTab = $tabsContainer.querySelector(
+            `[data-path="${currentTabs[currentTabs.length - 1]}"]`
+          );
+
+          // click the last tab
+          $nextTab.click();
+        }
+      } else {
+        $alertContainer.classList.remove("hidden");
+
+        // function to handle the save button
+        function handleSaveClick() {
+          // save the code and click again the close tab button
+          saveCode(currentEditingFile, $tab.dataset.content);
+          $tab.dataset.codeSaved = "true";
+          $closeTab.click();
+
+          // hide the alert
+          $alertContainer.classList.add("hidden");
+        }
+
+        // function to handle the dontsave button
+        function handleDontSaveClick() {
+          // click again the close tab button
+          $tab.dataset.codeSaved = "true";
+          $closeTab.click();
+
+          // hide the alert
+          $alertContainer.classList.add("hidden");
+        }
+
+        // function to handle the cancel button
+        function handleCancelClick() {
+          // hide the alert
+          $alertContainer.classList.add("hidden");
+        }
+
+        // add the functions to the event listeners of the buttons
+        $saveButton.addEventListener("click", handleSaveClick);
+        $dontSaveButton.addEventListener("click", handleDontSaveClick);
+        $cancelButton.addEventListener("click", handleCancelClick);
+      }
+    });
+  } else {
+    // get the tab that is already opened
+    const $requestedTab = $tabsContainer.querySelector(
+      `[data-path="${fullPath}"]`
+    );
+
+    // click the tab
+    $requestedTab.click();
+  }
+}
 
 // listen for the folderSelected event
 ipcRenderer.on("folderSelected", (event, data) => {
@@ -64,15 +276,19 @@ ipcRenderer.on("folderSelected", (event, data) => {
 });
 
 function createEditor(language, fileContent, fullPath) {
-  // if there is a current editor, dispose it
+  // remove the image class if the editor has it
+  if ($editor.classList.contains("image")) {
+    $editor.classList.remove("image");
+  }
+
+  // dispose the current editor if there is one
   if (currentEditor) {
     currentEditor.dispose();
     currentEditor = null;
   }
 
-  // clean the editor
+  // clear the current editor
   $editor.innerHTML = "";
-  $editor.classList.remove("image");
 
   // set the current editing file
   currentEditingFile = fullPath;
@@ -97,12 +313,6 @@ function createEditor(language, fileContent, fullPath) {
       language,
       ...editorConfig,
     });
-
-    // detect changes in the editor and set the codeSaved variable to false
-    currentEditor.onDidChangeModelContent(() => {
-      codeSaved = false;
-      $closeTab.innerHTML = '<i class="fa-solid fa-circle fa-xs"></i>';
-    });
   }
 }
 
@@ -119,7 +329,7 @@ function openFolder(folderPath, $parentContainer, iconType) {
       const fileExtension = file.substring(indexFileExtension + 1);
 
       // get the icon properties and the class
-      const iconProperties = getIcon(fileExtension) ?? "fa-solid fa-file";
+      const iconProperties = getIcon(fileExtension);
       const iconClass = iconProperties[0];
 
       // get the full path of the file and the stats
@@ -253,64 +463,8 @@ function openFolder(folderPath, $parentContainer, iconType) {
           // stop the button propagation
           e.stopPropagation();
 
-          // check if the code is saved
-          if (codeSaved) {
-            // clean the file name element of the tab
-            $fileName.innerHTML = "";
-
-            // show the editor and the tab
-            $editor.classList.remove("hidden");
-            $tab.classList.remove("hidden");
-
-            // create some elements
-            const $fileNamePar = document.createElement("p");
-            const $tabFileIcon = document.createElement("i");
-
-            // add the icon classes and styles
-            $tabFileIcon.classList.add(...iconClass.split(" "));
-            $tabFileIcon.style = iconProperties[1];
-
-            $fileNamePar.appendChild($tabFileIcon);
-            $fileNamePar.appendChild(document.createTextNode(` ${file}`));
-
-            $fileName.appendChild($fileNamePar);
-
-            // read the file to get the content and get the language
-            const fileContent = await fs.readFile(fullPath, "utf-8");
-            const language = getLang(fileExtension.toLowerCase());
-
-            // create the editor
-            createEditor(language, fileContent, fullPath);
-          } else {
-            // if the file isn't saved, show the alert
-            $alertContainer.classList.remove("hidden");
-
-            // create functions to handle the alert buttons
-            function handleSaveClick() {
-              saveCode(currentEditingFile);
-              $alertContainer.classList.add("hidden");
-              $closeTab.innerHTML = '<i class="fa-solid fa-xmark"></i>';
-
-              $fileButton.click();
-            }
-
-            function handleDontSaveClick() {
-              $alertContainer.classList.add("hidden");
-              codeSaved = true;
-              $closeTab.innerHTML = '<i class="fa-solid fa-xmark"></i>';
-
-              $fileButton.click();
-            }
-
-            function handleCancelClick() {
-              $alertContainer.classList.add("hidden");
-            }
-
-            // add an event listener to each button
-            $saveButton.addEventListener("click", handleSaveClick);
-            $dontSaveButton.addEventListener("click", handleDontSaveClick);
-            $cancelButton.addEventListener("click", handleCancelClick);
-          }
+          // open a new editor tab
+          await openNewTab(fullPath, fileExtension, iconProperties, file);
         }
       });
 
@@ -411,104 +565,27 @@ ipcRenderer.on("fileSelected", async (event, data) => {
   // get the file name from the full path
   const fileName = data.file.substring(data.file.lastIndexOf("/") + 1);
 
-  // show the editor and the tab
+  // show the editor
   $editor.classList.remove("hidden");
-  $tab.classList.remove("hidden");
-
-  // clear the file name element
-  $fileName.innerHTML = "";
 
   // get the file extension
   const indexFileExtension = fileName.lastIndexOf(".");
   const fileExtension = fileName.substring(indexFileExtension + 1);
 
-  // get the icon
+  // get the icon properties
   const fileIconProperties = getIcon(fileExtension);
-  const fileIconClass = fileIconProperties[0];
 
-  // create the file name
-  const $fileNamePar = document.createElement("p");
-  const $fileNameIcon = document.createElement("i");
-
-  // add some classes to the file icon on the tab
-  $fileNameIcon.classList.add(...fileIconClass.split(" "));
-  $fileNameIcon.style = fileIconProperties[1];
-
-  $fileNamePar.appendChild($fileNameIcon);
-  $fileNamePar.appendChild(document.createTextNode(` ${fileName}`));
-
-  $fileName.appendChild($fileNamePar);
-
-  // get the language
-  const language = getLang(fileExtension.toLowerCase());
-
-  // create the editor
-  createEditor(language, data.code, data.file);
+  // open a new editor tab
+  openNewTab(data.file, fileExtension, fileIconProperties, fileName);
 });
 
-function saveCode(filePath) {
+function saveCode(filePath, code) {
   // send the save code event
   ipcRenderer.send("saveCode", {
     file: filePath,
-    code: currentEditor.getValue(),
+    code,
   });
-
-  // set the code as saved
-  $closeTab.innerHTML = '<i class="fa-solid fa-xmark"></i>';
-  codeSaved = true;
 }
-
-$closeTab.addEventListener("click", () => {
-  // if the code is not saved, show the alert
-  if (!codeSaved) {
-    $alertContainer.classList.remove("hidden");
-
-    // create functions to handle the alert buttons
-    function handleSaveClick() {
-      saveCode(currentEditingFile);
-
-      $editor.classList.add("hidden");
-      $tab.classList.add("hidden");
-      $fileName.textContent = "";
-      currentEditor.dispose();
-      currentEditor = null;
-
-      currentEditingFile = null;
-
-      $alertContainer.classList.add("hidden");
-      $closeTab.innerHTML = '<i class="fa-solid fa-xmark"></i>';
-    }
-
-    function handleDontSaveClick() {
-      $editor.classList.add("hidden");
-      $tab.classList.add("hidden");
-      $fileName.textContent = "";
-      currentEditor.dispose();
-      currentEditor = null;
-
-      currentEditingFile = null;
-
-      $alertContainer.classList.add("hidden");
-      $closeTab.innerHTML = '<i class="fa-solid fa-xmark"></i>';
-    }
-
-    function handleCancelClick() {
-      $alertContainer.classList.add("hidden");
-    }
-
-    // add the event listeners
-    $saveButton.addEventListener("click", handleSaveClick);
-    $dontSaveButton.addEventListener("click", handleDontSaveClick);
-    $cancelButton.addEventListener("click", handleCancelClick);
-  } else {
-    // if the code is saved, close the editor
-    $editor.classList.add("hidden");
-    $tab.classList.add("hidden");
-    $fileName.textContent = "";
-    currentEditor.dispose();
-    currentEditor = null;
-  }
-});
 
 $createFile.addEventListener("click", () => {
   // create a function to handle the submit event on the file or folder name form
@@ -548,7 +625,7 @@ document.addEventListener("keydown", (e) => {
 
     // if an editor is opened save it
     if (currentEditor) {
-      saveCode(currentEditingFile);
+      saveCode(currentEditingFile, currentEditor.getValue());
     }
   }
 });

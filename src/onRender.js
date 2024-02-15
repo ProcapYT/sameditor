@@ -10,11 +10,8 @@ async function openFolder(path) {
       folder: path,
     });
   } else {
-    const fileContent = await fs.readFile(path, "utf-8");
-
     global.mainWindow.webContents.send("fileSelected", {
       file: path,
-      code: fileContent,
     });
   }
 }
