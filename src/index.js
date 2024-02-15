@@ -22,7 +22,9 @@ function createWindow() {
 
   global.mainWindow.removeMenu();
 
-  global.mainWindow.openDevTools();
+  if (!app.isPackaged) {
+    global.mainWindow.openDevTools();
+  }
 
   global.mainWindow.loadFile(join(__dirname, "..", "render", "index.html"));
 
