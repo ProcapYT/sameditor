@@ -5,6 +5,8 @@ export function getLang(fileExt) {
   // create a switch case to set the language
   switch (fileExt) {
     case "js":
+    case "cjs":
+    case "mjs":
       language = "javascript";
       break;
     case "ts":
