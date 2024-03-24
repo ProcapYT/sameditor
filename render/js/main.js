@@ -272,7 +272,7 @@ ipcRenderer.on("folderSelected", (event, data) => {
   $reloadButton.classList.remove("hidden");
 
   // open the folder passing some arguments
-  openFolder(data.folder, $filesContainer, "solid");
+  openFolder(data.folder, $filesContainer, "solid", 1);
 });
 
 function createEditor(language, fileContent, fullPath) {
@@ -316,7 +316,7 @@ function createEditor(language, fileContent, fullPath) {
   }
 }
 
-function openFolder(folderPath, $parentContainer, iconType) {
+function openFolder(folderPath, $parentContainer, iconType, indentation) {
   // get the list of files in the folder
   ipcRenderer.send("listFiles", { folder: folderPath });
 
@@ -375,6 +375,8 @@ function openFolder(folderPath, $parentContainer, iconType) {
       $createFileButton.appendChild($createFileIcon);
       $createFolderButton.appendChild($createFolderIcon);
 
+      $filePar.style = `margin-left: ${10 + indentation * 5}%`;
+
       if (isDirectory) {
         // create an arrow icon to indicate if the folder is opened or not
         const $arrowIcon = document.createElement("i");
@@ -389,7 +391,7 @@ function openFolder(folderPath, $parentContainer, iconType) {
           if (!$arrowIcon.classList.contains("opened")) {
             $arrowIcon.classList.add("opened");
 
-            openFolder(fullPath, $fileButton, "regular");
+            openFolder(fullPath, $fileButton, "regular", indentation + 1);
           } else {
             $arrowIcon.classList.remove("opened");
             $fileButton.innerHTML = "";

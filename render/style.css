@@ -17,21 +17,6 @@ body {
   height: 100%;
 }
 
-.read-folder,
-.read-file {
-  width: 100px;
-  height: 30px;
-  border: none;
-  outline: none;
-  background-color: #444444;
-  box-shadow: 0 0 10px #00000080;
-  color: #ffffff;
-  font-weight: bold;
-  border-radius: 0;
-  cursor: pointer;
-  margin-top: 10px;
-}
-
 .alert {
   position: absolute;
   width: 30%;
@@ -54,13 +39,13 @@ body {
   bottom: 0;
   height: 20%;
   border: 1px solid #cccccc;
-  background-color: #666666;
+  background-color: transparent;
 }
 
 .saveCode:hover,
 .dontSave:hover,
 .cancelButton:hover {
-  background-color: #555555;
+  background-color: rgba(0, 0, 0, 0.25);
 }
 
 .saveCode {
@@ -179,8 +164,9 @@ body {
   outline: none;
   background-color: #666666;
   color: #ffffff;
-  border: 1px solid #ffffff;
+  border: none;
   position: relative;
+  text-align: right;
 }
 
 .fileButton:hover {
@@ -204,20 +190,20 @@ body {
   outline: none;
   border-radius: 5px;
   color: #aaaaaa;
-  margin-bottom: 5px;
-  margin-top: 20px;
+  margin-bottom: 2px;
+  margin-top: 2px;
 }
 
 .deleteButton:hover,
 .renameButton:hover,
 .createFileButton:hover,
 .createFolderButton:hover {
-  background-color: #444444;
+  background-color: rgba(0, 0, 0, 0.25);
 }
 
 .filePar {
   position: absolute;
-  margin-left: 10%;
+  /* margin-left: 10%; */
   margin-top: 5px;
 }
 
@@ -243,7 +229,7 @@ body {
 }
 
 .shortcutButton {
-  background-color: #333333;
+  background-color: #111111;
   color: #ffffff;
   font-weight: bold;
   cursor: default;
@@ -264,7 +250,7 @@ body {
   justify-content: center;
   align-items: center;
   z-index: 100;
-  background-color: #555555;
+  background-color: #444444;
   color: #ffffff;
 }
 
@@ -274,7 +260,7 @@ body {
   height: 5%;
   top: 0;
   right: 0;
-  background-color: #555555;
+  background-color: #444444;
   color: #ffffff;
   display: flex;
   flex-direction: row;
