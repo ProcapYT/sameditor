@@ -46,7 +46,7 @@ let currentTab = null;
 
 async function openNewTab(fullPath, fileExtension, iconProperties, fileName) {
   // get the icon class from the first index of the properties array
-  const iconClass = iconProperties[0];
+  const iconPath = iconProperties[0];
 
   // create the tab elements
   const $tab = document.createElement("button");
@@ -69,14 +69,14 @@ async function openNewTab(fullPath, fileExtension, iconProperties, fileName) {
 
     // create some elements
     const $fileNamePar = document.createElement("p");
-    const $tabFileIcon = document.createElement("i");
+    const $tabFileIcon = document.createElement("img");
 
     // add the classes to the tab elements
     $tab.classList.add("tab");
     $fileName.classList.add("fileName");
     $closeTab.classList.add("closeTab");
     $closeTabIcon.classList.add("fa-solid", "fa-xmark");
-    $tabFileIcon.classList.add(...iconClass.split(" "));
+    $tabFileIcon.src = iconPath;
     $tabFileIcon.style = iconProperties[1];
 
     // add the tab to the container
@@ -272,7 +272,7 @@ ipcRenderer.on("folderSelected", (event, data) => {
   $reloadButton.classList.remove("hidden");
 
   // open the folder passing some arguments
-  openFolder(data.folder, $filesContainer, "solid", 1);
+  openFolder(data.folder, $filesContainer, 1);
 });
 
 function createEditor(language, fileContent, fullPath) {
@@ -316,7 +316,7 @@ function createEditor(language, fileContent, fullPath) {
   }
 }
 
-function openFolder(folderPath, $parentContainer, iconType, indentation) {
+function openFolder(folderPath, $parentContainer, indentation) {
   // get the list of files in the folder
   ipcRenderer.send("listFiles", { folder: folderPath });
 
@@ -326,11 +326,26 @@ function openFolder(folderPath, $parentContainer, iconType, indentation) {
     for (const file of files) {
       // get the file extension
       const indexFileExtension = file.lastIndexOf(".");
-      const fileExtension = file.substring(indexFileExtension + 1);
 
-      // get the icon properties and the class
-      const iconProperties = getIcon(fileExtension);
-      const iconClass = iconProperties[0];
+      let fileExtension = "";
+
+      // "if statement" so if there isn't a file ext it doesn't get the file name as it was it
+      // example: fileName: json | fileExt: json
+      if (indexFileExtension != -1) {
+        fileExtension = file.substring(indexFileExtension + 1);
+      }
+
+      const fileStats = await fs.stat(join(folderPath, file));
+
+      if (fileStats.isDirectory()) {
+        fileExtension = file;
+      }
+
+      // get the icon properties
+      const iconProperties = await getIcon(
+        fileExtension,
+        fileStats.isDirectory()
+      );
 
       // get the full path of the file and the stats
       const fullPath = join(folderPath, file);
@@ -348,8 +363,7 @@ function openFolder(folderPath, $parentContainer, iconType, indentation) {
       const $createFileIcon = document.createElement("i");
       const $createFolderButton = document.createElement("button");
       const $createFolderIcon = document.createElement("i");
-      const $folderIcon = document.createElement("i");
-      const $fileIcon = document.createElement("i");
+      const $fileIcon = document.createElement("img");
 
       // give the elements some classes
       $filePar.classList.add("filePar");
@@ -362,9 +376,7 @@ function openFolder(folderPath, $parentContainer, iconType, indentation) {
       $createFileIcon.classList.add("fa-file-circle-plus");
       $createFolderIcon.classList.add("fa-solid");
       $createFolderIcon.classList.add("fa-folder-plus");
-      $folderIcon.classList.add(`fa-${iconType}`);
-      $folderIcon.classList.add("fa-folder");
-      $fileIcon.classList.add(...iconClass.split(" "));
+      $fileIcon.src = iconProperties[0];
       $fileIcon.style = iconProperties[1];
       $deleteButton.classList.add("deleteButton");
       $renameButton.classList.add("renameButton");
@@ -384,14 +396,12 @@ function openFolder(folderPath, $parentContainer, iconType, indentation) {
         $arrowIcon.classList.add("fa-chevron-right");
 
         $fileButton.appendChild($arrowIcon);
-        $filePar.appendChild($folderIcon);
-
         // detect for a click in the file button element and open or close the folder
         $fileButton.addEventListener("click", (e) => {
           if (!$arrowIcon.classList.contains("opened")) {
             $arrowIcon.classList.add("opened");
 
-            openFolder(fullPath, $fileButton, "regular", indentation + 1);
+            openFolder(fullPath, $fileButton, indentation + 1);
           } else {
             $arrowIcon.classList.remove("opened");
             $fileButton.innerHTML = "";
@@ -406,9 +416,9 @@ function openFolder(folderPath, $parentContainer, iconType, indentation) {
           // stop the propagation of the click event so the parent buttons don't get clicked
           e.stopPropagation();
         });
-      } else {
-        $filePar.appendChild($fileIcon);
       }
+
+      $filePar.appendChild($fileIcon);
 
       $deleteButton.appendChild($deleteIcon);
       $renameButton.appendChild($renameIcon);
@@ -575,7 +585,7 @@ ipcRenderer.on("fileSelected", async (event, data) => {
   const fileExtension = fileName.substring(indexFileExtension + 1);
 
   // get the icon properties
-  const fileIconProperties = getIcon(fileExtension);
+  const fileIconProperties = getIcon(fileExtension, false);
 
   // open a new editor tab
   openNewTab(data.file, fileExtension, fileIconProperties, fileName);
