@@ -21,6 +21,10 @@
     "server": "folder-server.svg",
     "md": "folder-markdown.svg",
     "markdown": "folder-markdown.svg",
+    "setting": "folder-config.svg",
+    "settings": "folder-config.svg",
+    "font": "folder-font.svg",
+    "fonts": "folder-font.svg",
     "default": "folder.svg"
   },
   "files": {
@@ -50,6 +54,7 @@
     "yaml": "yaml.svg",
     "objective-c": "objective-c.svg",
     "txt": "document.svg",
+    "ttf": "font.svg",
     "default": "file.svg"
   }
 }

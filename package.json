@@ -1,6 +1,6 @@
 {
   "name": "sameditor",
-  "version": "1.11.0",
+  "version": "1.11.1",
   "description": "An editor made with electron and monaco-editor like vscode",
   "main": "src/index.js",
   "scripts": {
