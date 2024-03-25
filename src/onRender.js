@@ -2,6 +2,8 @@ const fs = require("node:fs/promises");
 const { ipcMain } = require("electron");
 const { join } = require("node:path");
 
+const { loadSettings } = require("./settings.js");
+
 async function openFolder(path) {
   const stats = await fs.stat(path);
 
@@ -32,4 +34,6 @@ ipcMain.on("rendered", async () => {
       await openFolder(join(process.cwd(), processArgs));
     }
   }
+
+  loadSettings();
 });

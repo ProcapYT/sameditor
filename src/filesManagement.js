@@ -83,3 +83,14 @@ ipcMain.on("reload", async (event, folder) => {
     folder,
   });
 });
+
+async function fileExists(filePath) {
+  try {
+    await fs.access(filePath, fs.constants.F_OK);
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
+module.exports = { fileExists };

@@ -1,5 +1,5 @@
-const fs = require("node:fs/promises");
 const { openDialog } = require("./dialogs.js");
+const { openSettings } = require("./settings.js");
 
 const mainTemplate = [
   {
@@ -29,6 +29,18 @@ const mainTemplate = [
               file: filePath,
             });
           }
+        },
+      },
+    ],
+  },
+  {
+    label: "Settings",
+    submenu: [
+      {
+        label: "Open Settings",
+        accelerator: "CmdOrCtrl+Shift+S",
+        click() {
+          openSettings();
         },
       },
     ],

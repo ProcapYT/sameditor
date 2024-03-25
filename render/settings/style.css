@@ -1,0 +1,46 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  width: 100%;
+  height: 100%;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  background-color: #444444;
+  color: #fff;
+  user-select: none;
+}
+
+.header {
+  position: fixed;
+  width: 100%;
+  height: 10%;
+  background-color: rgba(0, 0, 0, 0.25);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.header h1 {
+  color: #ddd;
+  font-size: 35px;
+}
+
+.settings {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 85%;
+  text-align: center;
+}
+
+.settingsSelect {
+  outline: none;
+  border: none;
+  width: 150px;
+  height: 30px;
+  background-color: #969696;
+  border-radius: 7px;
+}

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Settings - Sam Editor</title>
+  </head>
+  <body>
+    <div class="header">
+      <h1>Settings</h1>
+    </div>
+
+    <div class="settings">
+      <div class="theme">
+        <h2>Theme</h2>
+        <select name="theme" id="themeSelect" class="settingsSelect">
+          <option value="vs-dark" selected>VS Dark</option>
+          <option value="hc-black">High Contrast Dark</option>
+          <option value="github-dark">GitHub Dark</option>
+        </select>
+      </div>
+
+      <p>&nbsp;</p>
+
+      <div class="cursor">
+        <h2>Cursor</h2>
+        <h3>Cursor Style</h3>
+        <select
+          name="cursorStyle"
+          id="cursorStyleSelect"
+          class="settingsSelect"
+        >
+          <option value="line" selected>Line</option>
+          <option value="underline">Underline</option>
+          <option value="block">Block</option>
+          <option value="outline">Outline</option>
+          <option value="thin">Thin</option>
+        </select>
+
+        <p>&nbsp;</p>
+
+        <h3>Cursor Blinking</h3>
+        <select
+          name="cursorBlink"
+          id="cursorBlinkSelect"
+          class="settingsSelect"
+        >
+          <option value="blink">Blink</option>
+          <option value="expand">Expand</option>
+          <option value="hidden">Hidden</option>
+          <option value="phase">Phase</option>
+          <option value="smooth">Smooth</option>
+          <option value="solid">Solid</option>
+        </select>
+      </div>
+    </div>
+
+    <script src="./main.js"></script>
+  </body>
+</html>

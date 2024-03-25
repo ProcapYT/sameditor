@@ -25,6 +25,12 @@ const $dontSaveButton = document.querySelector(".dontSave");
 const loader = require("monaco-loader");
 const monaco = await loader();
 
+// theme definition
+const githubTheme = JSON.parse(
+  await fs.readFile(join(__dirname, "data", "themes", "github-dark.json"))
+);
+monaco.editor.defineTheme("github-dark", githubTheme);
+
 // set the default config for the monaco-editor
 const editorConfig = {
   theme: "vs-dark",
@@ -33,6 +39,8 @@ const editorConfig = {
   fontLigatures: true,
   tabSize: 2,
   automaticLayout: true,
+  cursorStyle: "line",
+  cursorBlinking: "blink",
 };
 
 // define some "global" variables
@@ -681,6 +689,30 @@ $ffNameInput.addEventListener("blur", () => {
 $reloadButton.addEventListener("click", () => {
   // reload the current folder
   ipcRenderer.send("reload", currentFolderPath);
+});
+
+// update the config when it is changed
+ipcRenderer.on("currentConfig", (event, settings) => {
+  for (const [setting, settingValue] of Object.entries(settings)) {
+    switch (setting) {
+      case "theme":
+        monaco.editor.setTheme(settingValue);
+
+        break;
+
+      default:
+        if (currentEditor !== null) {
+          const optionsToUpdate = {};
+          optionsToUpdate[setting] = settingValue;
+
+          currentEditor.updateOptions(optionsToUpdate);
+        }
+
+        break;
+    }
+
+    editorConfig[setting] = settingValue;
+  }
 });
 
 // send the rendered event so the app knows that is has been rendered
