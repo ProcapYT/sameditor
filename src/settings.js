@@ -23,7 +23,7 @@ async function mkdirExists(dirPath) {
 
 async function loadSettings() {
   if (app.isPackaged) {
-    mkdirExists(folderConfigPath);
+    await mkdirExists(folderConfigPath);
   }
 
   if (await fileExists(jsonConfigPath)) {
