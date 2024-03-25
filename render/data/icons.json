@@ -23,6 +23,10 @@
     "markdown": "folder-markdown.svg",
     "setting": "folder-config.svg",
     "settings": "folder-config.svg",
+    "config": "folder-config.svg",
+    "configs": "folder-config.svg",
+    "configuration": "folder-config.svg",
+    "configurations": "folder-config.svg",
     "font": "folder-font.svg",
     "fonts": "folder-font.svg",
     "default": "folder.svg"

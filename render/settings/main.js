@@ -10,6 +10,8 @@ const $settingsSelects = {
     document.querySelector("#cursorBlinkSelect"),
     "cursorBlinking",
   ],
+  $fontFamilyInput: [document.querySelector("#fontFamilyInput"), "fontFamily"],
+  $fontSizeInput: [document.querySelector("#fontSizeInput"), "fontSize"],
 };
 
 for (const key in $settingsSelects) {
@@ -38,7 +40,9 @@ ipcRenderer.on("currentConfig", (event, settings) => {
   for (const [setting, settingValue] of Object.entries(settings)) {
     const $settingElement = getSettingElement(setting)[0];
 
-    $settingElement.value = settingValue;
+    if ($settingElement) {
+      $settingElement.value = settingValue;
+    }
   }
 });
 

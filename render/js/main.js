@@ -1,5 +1,5 @@
 // import nodejs modules
-const { join } = require("node:path");
+const { join, sep } = require("node:path");
 const { ipcRenderer } = require("electron");
 const fs = require("node:fs/promises");
 
@@ -35,7 +35,7 @@ monaco.editor.defineTheme("github-dark", githubTheme);
 const editorConfig = {
   theme: "vs-dark",
   fontFamily: "CascadiaCode",
-  fontSize: 16,
+  fontSize: "16",
   fontLigatures: true,
   tabSize: 2,
   automaticLayout: true,
@@ -271,7 +271,7 @@ ipcRenderer.on("folderSelected", (event, data) => {
   // set the current folder path and the currentFolderPar element text content
   currentFolderPath = data.folder;
   $currentFolderPar.textContent = data.folder.substring(
-    data.folder.lastIndexOf("/") + 1
+    data.folder.lastIndexOf(sep) + 1
   );
 
   // remove the necesary hidden classes from the elements
@@ -583,7 +583,7 @@ function openFolder(folderPath, $parentContainer, indentation) {
 
 ipcRenderer.on("fileSelected", async (event, data) => {
   // get the file name from the full path
-  const fileName = data.file.substring(data.file.lastIndexOf("/") + 1);
+  const fileName = data.file.substring(data.file.lastIndexOf(sep) + 1);
 
   // show the editor
   $editor.classList.remove("hidden");
@@ -596,7 +596,7 @@ ipcRenderer.on("fileSelected", async (event, data) => {
   const fileIconProperties = getIcon(fileExtension, false);
 
   // open a new editor tab
-  openNewTab(data.file, fileExtension, fileIconProperties, fileName);
+  await openNewTab(data.file, fileExtension, fileIconProperties, fileName);
 });
 
 function saveCode(filePath, code) {
@@ -713,6 +713,13 @@ ipcRenderer.on("currentConfig", (event, settings) => {
 
     editorConfig[setting] = settingValue;
   }
+});
+
+ipcRenderer.on("openSettingsJson", async (_, jsonPath) => {
+  const iconProperties = await getIcon("json", false);
+  const fileName = jsonPath.substring(jsonPath.lastIndexOf(sep) + 1);
+
+  await openNewTab(jsonPath, "json", iconProperties, fileName);
 });
 
 // send the rendered event so the app knows that is has been rendered

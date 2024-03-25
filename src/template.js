@@ -1,5 +1,5 @@
 const { openDialog } = require("./dialogs.js");
-const { openSettings } = require("./settings.js");
+const { openSettings, openSettingsJson } = require("./settings.js");
 
 const mainTemplate = [
   {
@@ -41,6 +41,13 @@ const mainTemplate = [
         accelerator: "CmdOrCtrl+Shift+S",
         click() {
           openSettings();
+        },
+      },
+      {
+        label: "Open Settings File",
+        accelerator: "CmdOrCtrl+Shift+P",
+        click() {
+          openSettingsJson();
         },
       },
     ],
