@@ -1,4 +1,4 @@
-# Sam Editor
+![Sam Editor](./images/sameditor-big.png)
 
 A simple editor, made with monaco-editor (the same editor that vscode uses).
 It has a theme system that makes it completely customizable and a terminal feature.
