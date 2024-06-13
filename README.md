@@ -3,7 +3,7 @@
 A simple editor, made with monaco-editor (the same editor that vscode uses).
 It has a theme system that makes it completely customizable and a terminal feature.
 
-[Example Image](./images/editor.png)
+![Example Image](./images/editor.png)
 
 ## Instalation
 
@@ -31,4 +31,4 @@ and select your theme
 To edit your settings by opening the settings window in the menu: settings -> open settings window
 or press Ctrl+Coma in the keyboard, another option is to open the settings.json file: settings -> open settings file
 
-[Settings window image](./images/settings.png)
+![Settings window image](./images/settings.png)
