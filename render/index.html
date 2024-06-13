@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>Sameditor</title>
+</head>
+
+<body>
+  <div id="background">&lt;/&gt;</div>
+  <div id="editor"></div>
+  <div id="tabs"></div>
+  <div id="resizer"></div>
+  <div id="fileContainer"></div>
+  <div id="selectedFolder">
+    <p id="selectedFolderName">No Folder Selected</p>
+    <button class="fileManagementButton hidden" id="createFileButton"><i class="fa-solid fa-file-circle-plus"></i></button>
+    <button class="fileManagementButton hidden" id="createFolderButton"><i class="fa-solid fa-folder-plus"></i></button>
+    <button class="fileManagementButton hidden" id="reloadFolderButton"><i class="fa-solid fa-rotate-right"></i></button>
+    <button class="fileManagementButton hidden" id="closeFoldersButton"><i class="fa-solid fa-folder-minus"></i></button>
+  </div>
+
+  <div id="contextMenu"></div>
+
+  <script src="javascript/fontawesome.js"></script>
+  <script type="module" src="./javascript/editor.js"></script>
+  <script type="module" src="./javascript/resizer.js"></script>
+  <script type="module" src="./javascript/themes.js"></script>
+  <script type="module" src="./javascript/filesManagement.js"></script>
+  <script type="module" src="./javascript/tabs.js"></script>
+  <script type="module" src="./javascript/contextMenu.js"></script>
+</body>
+
+</html>

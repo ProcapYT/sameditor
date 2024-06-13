@@ -1,0 +1,53 @@
+{
+    "name": "light",
+    "fileListBackground": "#dddddd",
+    "fileButton": "#dddddd",
+    "fileButtonHover": "#8370ff",
+    "fileInputBackground": "#dddddd",
+    "fileInputBorder": "#311ac7",
+    "background": "#ffffff",
+    "backgroundFontColor": "#dddddd",
+    "resizerColor": "#00000044",
+    "tabsContainer": "#cccccc",
+    "tab": "#00000000",
+    "tabSelected": "#ffffff",
+    "tabHover": "#9084e3",
+    "header": "#cccccc",
+    "fontColor": "#454545",
+    "defaultFont": "Arial",
+    "settings": {
+        "inputBorder": "#311ac7",
+        "inputBackground": "#dddddd"
+    },
+    "contextMenu": {
+        "backgroundColor": "#bbbbbb",
+        "option.backgroundColor": "transparent",
+        "option.hover": "#9084e3"
+    },
+    "editor.theme": {
+        "base": "vs",
+        "inherit": true,
+        "rules": [
+          { "token": "", "foreground": "000000", "background": "ffffff" },
+          { "token": "comment", "foreground": "008000" },
+          { "token": "keyword", "foreground": "0000ff" },
+          { "token": "identifier", "foreground": "000000" },
+          { "token": "number", "foreground": "09885a" },
+          { "token": "string", "foreground": "a31515" },
+          { "token": "delimiter", "foreground": "000000" },
+          { "token": "operator", "foreground": "000000" },
+          { "token": "variable", "foreground": "001080" },
+          { "token": "type", "foreground": "267f99" },
+          { "token": "function", "foreground": "795e26" }
+        ],
+        "colors": {
+          "editor.foreground": "#000000",
+          "editor.background": "#ffffff",
+          "editorCursor.foreground": "#000000",
+          "editor.lineHighlightBackground": "#f0f0f0",
+          "editorLineNumber.foreground": "#000000",
+          "editor.selectionBackground": "#add6ff",
+          "editor.inactiveSelectionBackground": "#e5ebf1"
+        }
+    }
+}

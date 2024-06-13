@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="styles.css">
+        <title>Sameditor - Settings</title>
+    </head>
+    <body>
+        <div style="text-align: left; width: 200px; height: 100%;">
+            <div style="margin-top: 25px;">
+                <h3>Theme</h3>
+                <select class="input" id="themeSelect"></select>
+            </div>
+            <div style="margin-top: 20px;">
+                <h3>Font Size</h3>
+                <input type="text" class="input" id="fontSizeInput">
+            </div>
+            <div style="margin-top: 20px">
+                <h3>Font Family</h3>
+                <input type="text" class="input" id="fontFamilyInput">
+            </div>
+            <div style="margin-top: 20px">
+                <h3>Font Ligatures</h3>
+                <select class="input" id="fontLigaturesSelect">
+                    <option value="true" selected>On</option>
+                    <option value="false">Off</option>
+                </select>
+            </div>
+            <div style="margin-top: 20px">
+                <h3>Word Wrap</h3>
+                <select class="input" id="wordWrapSelect">
+                    <option value="on" selected>On</option>
+                    <option value="off">Off</option>
+                </select>
+            </div>
+            <div style="margin-top: 20px">
+                <h3>Tab Size</h3>
+                <input type="number" class="input" id="tabSizeInput">
+            </div>
+            <div style="margin-top: 20px">
+                <h3>Cursor Style</h3>
+                <select class="input" id="cursorStyleSelect">
+                    <option value="line" selected>Line</option>
+                    <option value="line-thin">Line Thin</option>
+                    <option value="block">Block</option>
+                    <option value="block-outline">Block Outline</option>
+                    <option value="underline">Underline</option>
+                    <option value="underline-thin">Underline Thin</option>
+                </select>
+            </div>
+            <div style="margin-top: 20px">
+                <h3>Cursor Blinking</h3>
+                <select class="input" id="cursorBlinkingSelect">
+                    <option value="blink" selected>Blink</option>
+                    <option value="smooth">Smooth</option>
+                    <option value="phase">Phase</option>
+                    <option value="expand">Expand</option>
+                    <option value="solid">Solid</option>
+                </select>
+            </div>
+        </div>
+        <script type="module" src="./settings.js"></script>
+    </body>
+</html>

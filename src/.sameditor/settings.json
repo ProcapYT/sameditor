@@ -1,0 +1,10 @@
+{
+    "theme": "light",
+    "fontLigatures": "true",
+    "fontFamily": "CascadiaCode",
+    "fontSize": "16",
+    "tabSize": "4",
+    "cursorStyle": "line",
+    "cursorBlinking": "expand",
+    "wordWrap": "on"
+}

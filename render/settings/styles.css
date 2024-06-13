@@ -1,0 +1,38 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+}
+
+input {
+    border: none;
+    outline: none;
+    border-radius: 0;
+    width: 150px;
+    height: 23px;
+    padding: 5px;
+}
+
+select {
+    width: 150px;
+    height: 23px;
+    border: none;
+    outline: none;
+    border-radius: 0;
+}
+
+option {
+    border: none;
+    outline: none;
+    border-radius: 0;
+    appearance: none;
+}
