@@ -1,6 +1,6 @@
 {
     "name": "sameditor",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "main": "src/main.js",
     "description": "A code editor very similar to vscode.",
     "scripts": {
@@ -31,6 +31,8 @@
         "emmet-monaco-es": "^5.3.2",
         "load-monaco": "^1.0.4",
         "monaco-editor": "^0.49.0",
+        "recycle-bin": "^0.1.3",
+        "sudo-prompt": "^9.2.1",
         "trash": "^8.1.1"
     }
 }

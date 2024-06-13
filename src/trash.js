@@ -1,5 +1,7 @@
 const { ipcMain, dialog } = require("electron");
 const path = require("node:path");
+const os = require("node:os");
+const sudo = require("sudo-prompt");
 
 ipcMain.on("moveToTrash", async (event, filePath) => {
     const { default: trash } = await import("trash");
@@ -19,9 +21,25 @@ ipcMain.on("moveToTrash", async (event, filePath) => {
     if (result.response == 0) {
         try {
             await trash([filePath]);
-        } catch(error) {
-            dialog.showErrorBox("Error", `Error moving ${fileName} to the recicle bin: ${error}`);
-            return;
+        } catch {
+            const options = {
+                name: "Sameditor",
+            };
+
+            let command = "";
+            const platform = os.platform();
+
+            if (platform == "linux") {
+                const trashPath = path.join(os.homedir(), ".local", "share", "Trash", "files");
+                command = `mv "${filePath}" "${trashPath}"`;
+            } else if (platform == "win32") {
+                command = `node -e "require('recycle-bin').deleteSync(['${filePath}'])"`;
+            }
+
+            sudo.exec(command, options, (error) => {
+                dialog.showErrorBox("Error", `Error moving ${fileName} to the recicle bin: ${error}`);
+                return;
+            });
         }
 
         event.reply("reloadFolder");

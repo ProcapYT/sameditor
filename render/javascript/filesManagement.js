@@ -51,6 +51,8 @@ async function openFolder(folderPath, indentation, $parent) {
 
         $fileButton.dataset.folderOpened = "false";
 
+        let watcher = null;
+
         if (isDir)
             $filePar.appendChild($dirIcon);
 
@@ -78,8 +80,6 @@ async function openFolder(folderPath, indentation, $parent) {
 
             ContextMenu.addOption("Rename", renameFile);
             ContextMenu.addOption("Delete", deleteFile);
-
-
 
             ContextMenu.showContextMenu(e);
         });
@@ -183,6 +183,11 @@ async function openFolder(folderPath, indentation, $parent) {
                     }
 
                     $fileButton.dataset.folderOpened = "false";
+
+                    if (watcher != null) {
+                        watcher.close();
+                        watcher = null;
+                    }
                 } else {
                     $dirIcon.classList.add("opened");
                     openFolder(fullFilePath, indentation + 1, $fileButton);
@@ -191,6 +196,11 @@ async function openFolder(folderPath, indentation, $parent) {
                         openedFolders.push(fullFilePath);
 
                     $fileButton.dataset.folderOpened = "true";
+
+                    watcher = watchFolder(fullFilePath, () => {
+                        $fileButton.click();
+                        $fileButton.click();
+                    });
                 }
 
                 $lastClickedFolder = $fileButton;
@@ -356,7 +366,7 @@ ipcRenderer.on("folderSelected", async (_, folderPath) => {
         currentWatcher = null;
     }
 
-    currentWatcher = await watchFolder(folderPath, async () => {
+    currentWatcher = watchFolder(folderPath, async () => {
         await reopenFolder();
         await deletedFile();
     });
@@ -397,36 +407,24 @@ document.addEventListener("keydown", (e) => {
     }
 });
 
-async function watchFolder(folder, onChange) {
+function watchFolder(folder, onChange) {
     let currentFiles = [];
     let prevFiles = [];
 
-    async function addFilesRecursive(folderPath) {
-        try {
-            const folderFiles = await fs.readdir(folderPath);
-            for (const file of folderFiles) {
-                const filePath = path.join(folderPath, file);
-                currentFiles.push(filePath);
-                const stats = await fs.stat(filePath);
-                if (stats.isDirectory()) {
-                    await addFilesRecursive(filePath);
-                }
-            }
-        } catch (error) {
-            console.error('Error al leer el directorio:', error);
-        }
+    async function readAndSortFiles() {
+        return (await fs.readdir(folder)).sort();
     }
 
-    await addFilesRecursive(folder);
+    async function init() {
+        prevFiles = await readAndSortFiles();
+    }
+
+    init().catch(console.error);
 
     const watchInterval = setInterval(async () => {
-        currentFiles = [];
-        await addFilesRecursive(folder);
+        currentFiles = await readAndSortFiles(folder);
 
-        const prevFilesString = JSON.stringify(prevFiles.sort());
-        const currentFilesString = JSON.stringify(currentFiles.sort());
-
-        if (prevFilesString !== currentFilesString) {
+        if (!arraysEqual(currentFiles, prevFiles)) {
             onChange();
             prevFiles = currentFiles;
         }
@@ -435,8 +433,17 @@ async function watchFolder(folder, onChange) {
     const watcher = {
         close() {
             clearInterval(watchInterval);
-        }
+        },
+        folder,
     };
+
+    function arraysEqual(a, b) {
+        if (a.length !== b.length) return false;
+        for (let i = 0; i < a.length; i++) {
+            if (a[i] !== b[i]) return false;
+        }
+        return true;
+    }
 
     return watcher;
 }
