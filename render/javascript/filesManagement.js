@@ -76,6 +76,16 @@ async function openFolder(folderPath, indentation, $parent) {
                     
                     await createFile(fullFilePath, indentation + 1, true, $fileButton);
                 });
+
+                ContextMenu.addOption("Close Childs", async () => {
+                    for (const folder of openedFolders) {
+                        if (folder.startsWith(fullFilePath) && folder != fullFilePath) {
+                            openedFolders.splice(openedFolders.indexOf(folder), 1);
+                        }
+                    }
+
+                    await reopenFolder();
+                });
             }
 
             ContextMenu.addOption("Rename", renameFile);
@@ -108,7 +118,7 @@ async function openFolder(folderPath, indentation, $parent) {
                                 const folder = openedFolders[i];
                                 if (folder.startsWith(fullFilePath + path.sep)) {
                                     const substringedFolder = folder.substring(fullFilePath.length);
-                                    openedFolders[i] = path.join(openedFolders[thisFolderIndex],substringedFolder);
+                                    openedFolders[i] = path.join(openedFolders[thisFolderIndex],  substringedFolder);
                                 }
                             }
                         }
@@ -176,11 +186,6 @@ async function openFolder(folderPath, indentation, $parent) {
                     $dirIcon.classList.remove("opened");
                     
                     openedFolders.splice(openedFolders.indexOf(fullFilePath), 1);
-                    for (const folder of openedFolders) {
-                        if (folder.startsWith(fullFilePath)) {
-                            openedFolders.splice(openedFolders.indexOf(folder, 1));
-                        }
-                    }
 
                     $fileButton.dataset.folderOpened = "false";
 
