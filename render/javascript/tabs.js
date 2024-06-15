@@ -220,3 +220,12 @@ export async function deletedFile() {
         }
     }
 }
+
+document.addEventListener("keydown", (e) => {
+    if (e.key == "w" && e.ctrlKey) {
+        if ($currentTab != null) {
+            const $closeButton = $currentTab.querySelector(".tabCloseButton");
+            $closeButton.click();
+        }
+    }
+});
